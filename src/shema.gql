@@ -1,0 +1,55 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AuthInput {
+  email: String!
+  password: String!
+}
+
+type AuthType {
+  access_token: String!
+}
+
+input CreateMessageInput {
+  message: String!
+  to: ID!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+type MessageType {
+  _id: ID!
+  createdAt: String!
+  from: ID!
+  message: String!
+  to: ID!
+}
+
+type Mutation {
+  addMessage(input: CreateMessageInput!): MessageType!
+  addUser(input: CreateUserInput!): UserType!
+  login(loginUserInput: AuthInput!): AuthType!
+}
+
+type Query {
+  getMessages(to: ID!): [MessageType!]!
+  getProfile: UserType!
+  getUser(id: ID!): UserType!
+  getUsers: [UserType!]!
+}
+
+type Subscription {
+  messageAdd: MessageType!
+}
+
+type UserType {
+  _id: ID!
+  createdAt: String!
+  email: String!
+  name: String!
+}
