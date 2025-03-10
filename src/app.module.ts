@@ -7,6 +7,8 @@ import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { MessageModule } from './message/message.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PostModule } from './post/post.module';
+import { PostLikeModule } from './post-like/post-like.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UserModule,
     AuthModule,
     MessageModule,
+    PostModule,
+    PostLikeModule,
   ],
   controllers: [],
   providers: [],
