@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { PostLike } from "src/post-like/schema/post-like.schema";
+import { CommentType } from "src/comment/type/comment.type";
 import { PostLikeType } from "src/post-like/type/post-like.type";
 import { UserType } from "src/user/type/user.type";
 
@@ -16,6 +16,9 @@ export class PostType {
 
     @Field(() => [PostLikeType])
     likes: PostLikeType[]
+
+    @Field(() => [CommentType])
+    comments: CommentType[]
    
     @Field(() => String)
     createdAt: Date

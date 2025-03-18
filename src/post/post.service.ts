@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './schema/post.schema';
 import { Model, ObjectId } from 'mongoose';
 import { CreatePostInput } from './input/post-create,input';
-import { PostLikeDocument } from 'src/post-like/schema/post-like.schema';
 
 @Injectable()
 export class PostService {
@@ -15,7 +14,7 @@ export class PostService {
     }
 
     async findAll(): Promise<PostDocument[]> {
-        return this.postModel.find();
+        return this.postModel.find().sort({ createdAt: -1 })
     }
 
     async findById(id: string | ObjectId): Promise<PostDocument | null> {
@@ -40,23 +39,5 @@ export class PostService {
         );
 
         return post;
-    }
-
-    async addLikePost(postLike: PostLikeDocument): Promise<void> {
-        await this.postModel.updateOne(
-            { _id: postLike.post },
-            {
-                $push: { likes: postLike }
-            }
-        )
-    }
-
-    async deleteLikePost(postLike: PostLikeDocument): Promise<void> {
-        await this.postModel.updateOne(
-            { _id: postLike.post },
-            {
-                $pull: { likes: { _id: postLike._id } }
-            }
-        )
     }
 }

@@ -13,9 +13,6 @@ export class Post {
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
     user: User
 
-    @Prop([PostLike])
-    likes: PostLike[];
-
     @Prop({ default: Date.now })
     createdAt: Date
 }

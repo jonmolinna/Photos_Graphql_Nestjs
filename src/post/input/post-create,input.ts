@@ -6,6 +6,6 @@ export class CreatePostInput {
     @Field(() => String)
     @IsNotEmpty({ message: 'Ingrese una publicación' })
     @MinLength(5, { message: "La publicación es demasiado corta" })
-    @MaxLength(520, { message: "La publicación es demasiado largo" })
+    @MaxLength(400, { message: "La publicación es demasiado largo" })
     comment: string
 }
