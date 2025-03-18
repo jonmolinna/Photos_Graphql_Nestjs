@@ -11,6 +11,27 @@ type AuthType {
   access_token: String!
 }
 
+type CommentLikeType {
+  _id: ID!
+  comment: ID!
+  createdAt: String!
+  user: ID!
+}
+
+type CommentType {
+  _id: ID!
+  comment: String!
+  createdAt: String!
+  likes: [CommentLikeType!]!
+  post: ID!
+  user: UserType!
+}
+
+input CreateCommentInput {
+  comment: String!
+  post: ID!
+}
+
 input CreateMessageInput {
   message: String!
   to: ID!
@@ -35,11 +56,14 @@ type MessageType {
 }
 
 type Mutation {
-  addLikeOrDeleteLike(postId: ID!): PostLikeType
+  addComment(input: CreateCommentInput!): CommentType
+  addLikeOrUnlikePost(postId: ID!): PostLikeType
   addMessage(input: CreateMessageInput!): MessageType!
   addPost(input: CreatePostInput!): PostType!
   addUser(input: CreateUserInput!): UserType!
+  deleteComment(commentId: ID!): CommentType
   deletePost(postId: ID!): PostType
+  likeOrUnlikeComment(commentId: ID!): CommentLikeType
   login(loginUserInput: AuthInput!): AuthType!
   updatePost(input: CreatePostInput!, postId: ID!): PostType
 }
@@ -54,6 +78,7 @@ type PostLikeType {
 type PostType {
   _id: ID!
   comment: String!
+  comments: [CommentType!]!
   createdAt: String!
   likes: [PostLikeType!]!
   user: UserType!
@@ -61,7 +86,7 @@ type PostType {
 
 type Query {
   getMessages(to: ID!): [MessageType!]!
-  getPost(id: ID!): PostType!
+  getPost(id: ID!): PostType
   getPosts: [PostType!]!
   getProfile: UserType!
   getUser(id: ID!): UserType!

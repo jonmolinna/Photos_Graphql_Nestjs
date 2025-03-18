@@ -9,6 +9,8 @@ import { MessageModule } from './message/message.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PostModule } from './post/post.module';
 import { PostLikeModule } from './post-like/post-like.module';
+import { CommentModule } from './comment/comment.module';
+import { CommentLikeModule } from './comment-like/comment-like.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { PostLikeModule } from './post-like/post-like.module';
     MessageModule,
     PostModule,
     PostLikeModule,
+    CommentModule,
+    CommentLikeModule,
   ],
   controllers: [],
   providers: [],
