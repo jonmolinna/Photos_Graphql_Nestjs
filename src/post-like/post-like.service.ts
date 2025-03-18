@@ -2,45 +2,38 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PostLike, PostLikeDocument } from './schema/post-like.schema';
 import { Model, ObjectId } from 'mongoose';
-import { PostService } from 'src/post/post.service';
 
 @Injectable()
 export class PostLikeService {
-    constructor(
-        @InjectModel(PostLike.name) private postLikeModel: Model<PostLike>,
-        private postService: PostService,
-    ) {}
 
-    async findOne(postId: ObjectId, userId: ObjectId | string): Promise<PostLikeDocument | null> {
-        const postLike = this.postLikeModel.findOne({user: userId, post: postId});
-        return postLike;
+    constructor(@InjectModel(PostLike.name) private postLikeModel: Model<PostLike>) {}
+
+    async findAllLikesByPostId(postId: string | ObjectId): Promise<PostLikeDocument[]> {
+        return await this.postLikeModel.find({post: postId})
     }
 
-    async likeOrUnlike(postId: ObjectId, userId: string | ObjectId): Promise<PostLikeDocument | null> {
-        const post = await this.postService.findById(postId);
-        
-        if (!post) {
-            return null;
+    async findOne(postId: ObjectId | string, userId: ObjectId | string): Promise<PostLikeDocument | null> {
+        return await this.postLikeModel.findOne({post: postId, user: userId});
+    }
+
+    async likeOrUnlike(postId: ObjectId | string, userId: string | ObjectId): Promise<PostLikeDocument | null> {
+        const like = await this.findOne(postId, userId);
+
+        if (like) {
+            return await this.postLikeModel.findOneAndDelete({ _id: like._id });
         }
 
-        const postLikeExist = await this.findOne(post.id, userId);
+        const newLike = new this.postLikeModel({ user: userId, post: postId });
+        return await newLike.save();
+    }
 
-        if (postLikeExist) {
-            const deletePostLike = await this.postLikeModel.findOneAndDelete(
-                {_id: postLikeExist._id }
-            )
+    async deleteManyLike(postId: string | ObjectId): Promise<boolean> {
+        const likes = await this.postLikeModel.deleteMany({ post: postId });
 
-            if (deletePostLike) {
-                this.postService.deleteLikePost(deletePostLike);
-            }
-
-            return deletePostLike;
+        if (likes.acknowledged) {
+            return true
         }
-        else {
-            const createPostLike = new this.postLikeModel({ user: userId, post: post.id });
-            const postLike = await createPostLike.save();
-            this.postService.addLikePost(postLike);
-            return postLike;
-        }
+
+        return false
     }
 }
