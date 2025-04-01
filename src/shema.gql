@@ -57,13 +57,13 @@ type MessageType {
 
 type Mutation {
   addComment(input: CreateCommentInput!): CommentType
+  addLikeOrUnlikeComment(commentId: ID!): CommentLikeType
   addLikeOrUnlikePost(postId: ID!): PostLikeType
   addMessage(input: CreateMessageInput!): MessageType!
   addPost(input: CreatePostInput!): PostType!
   addUser(input: CreateUserInput!): UserType!
   deleteComment(commentId: ID!): CommentType
   deletePost(postId: ID!): PostType
-  likeOrUnlikeComment(commentId: ID!): CommentLikeType
   login(loginUserInput: AuthInput!): AuthType!
   updatePost(input: CreatePostInput!, postId: ID!): PostType
 }
@@ -85,6 +85,7 @@ type PostType {
 }
 
 type Query {
+  getComments(postId: ID!): [CommentType!]
   getMessages(to: ID!): [MessageType!]!
   getPost(id: ID!): PostType
   getPosts: [PostType!]!

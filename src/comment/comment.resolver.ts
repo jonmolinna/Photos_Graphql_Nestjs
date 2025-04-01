@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args, ResolveField, Parent, ID } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, ResolveField, Parent, ID, Query } from '@nestjs/graphql';
 import { CommentService } from './comment.service';
 import { CommentType } from './type/comment.type';
 import { CurrentUser } from 'src/decorator/current-user.decorator';
@@ -18,6 +18,14 @@ export class CommentResolver {
         private commentLikeService: CommentLikeService,
     ) {}
 
+    @Query(() => [CommentType], { nullable: true })
+    @UseGuards(JwtAuthGuard)
+    async getComments(
+        @Args("postId", { type: () => ID }, ParseObjectIdPipe) postId: ObjectId,
+    ) {
+        return await this.commentService.findAllCommentsByPostId(postId);
+    }
+
     @Mutation(() => CommentType, {nullable: true})
     @UseGuards(JwtAuthGuard)
     async deleteComment(
@@ -30,7 +38,7 @@ export class CommentResolver {
     // LIKE COMMENT
     @Mutation(() => CommentLikeType, { nullable: true })
     @UseGuards(JwtAuthGuard)
-    async likeOrUnlikeComment(
+    async addLikeOrUnlikeComment(
         @Args("commentId", { type: () => ID }, ParseObjectIdPipe) commentId: ObjectId,
         @CurrentUser() user: {email: string, sub: string},
     ) {

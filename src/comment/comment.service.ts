@@ -14,7 +14,7 @@ export class CommentService {
     }
 
     async findAllCommentsByPostId(postId: ObjectId | string): Promise<CommentDocument[]> {
-        return await this.commentModel.find({post: postId})
+        return await this.commentModel.find({post: postId}).sort({ createdAt: -1 })
     }
 
     async findOne(commentId: ObjectId | string, userId: ObjectId | string): Promise<CommentDocument| null> {

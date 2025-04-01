@@ -99,7 +99,7 @@ export class PostResolver {
         const post = await this.postService.findById(createCommentInput.post);
 
         if (post) {
-            return this.commentService.create({...createCommentInput, post: post.id }, user.sub)
+            return this.commentService.create({...createCommentInput, post: createCommentInput.post}, user.sub)
         }
 
         return null;
